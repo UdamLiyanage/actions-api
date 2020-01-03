@@ -1,7 +1,22 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"context"
+	"encoding/json"
+	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 func createConfiguration(c *gin.Context) {
-	c.String(200, "Create configuration function")
+	var config Configuration
+	err := json.NewDecoder(c.Request.Body).Decode(&config)
+	if err != nil {
+		panic(err)
+	}
+	insertResult, err := db.Collection.InsertOne(context.TODO(), config)
+	if err != nil {
+		panic(err)
+	}
+	config.ID = insertResult.InsertedID.(primitive.ObjectID)
+	c.JSON(201, config)
 }
