@@ -28,5 +28,5 @@ func updateConfiguration(c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	c.JSON(200, config)
+	c.Status(200)
 }
