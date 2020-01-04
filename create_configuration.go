@@ -10,13 +10,9 @@ import (
 func createConfiguration(c *gin.Context) {
 	var config Configuration
 	err := json.NewDecoder(c.Request.Body).Decode(&config)
-	if err != nil {
-		panic(err)
-	}
+	checkError(err, c)
 	insertResult, err := db.Collection.InsertOne(context.TODO(), config)
-	if err != nil {
-		panic(err)
-	}
+	checkError(err, c)
 	config.ID = insertResult.InsertedID.(primitive.ObjectID)
 	c.JSON(201, config)
 }
