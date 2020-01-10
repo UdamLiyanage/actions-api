@@ -20,7 +20,7 @@ func updateConfiguration(c *gin.Context) {
 			"configuration": config.Configuration,
 		},
 	}
-	_, err = DB.Collection.UpdateOne(context.TODO(), filter, update)
+	res, err := DB.Collection.UpdateOne(context.TODO(), filter, update)
 	checkError(err, c)
-	c.Status(200)
+	c.JSON(200, res)
 }
