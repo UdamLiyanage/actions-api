@@ -11,7 +11,7 @@ func createConfiguration(c *gin.Context) {
 	var config Configuration
 	err := json.NewDecoder(c.Request.Body).Decode(&config)
 	checkError(err, c)
-	insertResult, err := db.Collection.InsertOne(context.TODO(), config)
+	insertResult, err := DB.Collection.InsertOne(context.TODO(), config)
 	checkError(err, c)
 	config.ID = insertResult.InsertedID.(primitive.ObjectID)
 	c.JSON(201, config)

@@ -20,7 +20,7 @@ func updateConfiguration(c *gin.Context) {
 			"configuration": config.Configuration,
 		},
 	}
-	_, err = db.Collection.UpdateOne(context.TODO(), filter, update)
+	_, err = DB.Collection.UpdateOne(context.TODO(), filter, update)
 	checkError(err, c)
 	c.Status(200)
 }

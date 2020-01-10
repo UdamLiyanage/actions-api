@@ -11,7 +11,7 @@ func readConfiguration(c *gin.Context) {
 	var config Configuration
 	objID, err := primitive.ObjectIDFromHex(c.Param("id"))
 	filter := bson.M{"_id": objID}
-	err = db.Collection.FindOne(context.TODO(), filter).Decode(&config)
+	err = DB.Collection.FindOne(context.TODO(), filter).Decode(&config)
 	checkError(err, c)
 	c.JSON(200, config)
 }
