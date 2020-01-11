@@ -16,7 +16,9 @@ func deleteConfiguration(c *gin.Context) {
 	})
 	objID, err := primitive.ObjectIDFromHex(c.Param("id"))
 	checkError(err, c)
-	filter := bson.D{{"_id", objID}}
+	filter := bson.D{
+		bson.E{Key: "_id", Value: objID},
+	}
 	_, err = DB.Collection.DeleteOne(context.TODO(), filter, opts)
 	checkError(err, c)
 	c.JSON(404, nil)
