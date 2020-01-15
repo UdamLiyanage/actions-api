@@ -21,7 +21,7 @@ func setupRouter() *gin.Engine {
 
 	r.GET("/configurations/:id", readConfiguration)
 
-	r.POST("/configurations", createConfiguration)
+	r.POST("/configurations/create", createConfiguration)
 
 	r.PUT("/configurations/:id", updateConfiguration)
 
