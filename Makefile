@@ -1,4 +1,4 @@
-IMAGE := udamliyanage/device-configuration-service
+IMAGE := udamliyanage/device-configuration-service:v1
 
 test:
 	true
