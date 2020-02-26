@@ -1,19 +1,13 @@
 package main
 
-import (
-	"github.com/gin-gonic/gin"
-	"go.mongodb.org/mongo-driver/mongo"
-)
+import "go.mongodb.org/mongo-driver/mongo"
 
-func checkError(err error, c *gin.Context) {
-	if err == nil {
-		return
+func checkError(err error) bool {
+	if err != nil {
+		return true
 	}
 	if err == mongo.ErrNoDocuments {
-		notFoundResponse(c)
+		return true
 	}
-}
-
-func notFoundResponse(c *gin.Context) {
-	_ = c.AbortWithError(404, nil)
+	return false
 }

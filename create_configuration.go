@@ -3,16 +3,20 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"github.com/gin-gonic/gin"
+	"github.com/labstack/echo/v4"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func createConfiguration(c *gin.Context) {
+func createConfiguration(c echo.Context) error {
 	var config Configuration
-	err := json.NewDecoder(c.Request.Body).Decode(&config)
-	checkError(err, c)
+	err := json.NewDecoder(c.Request().Body).Decode(&config)
+	if checkError(err) {
+		return c.JSON(500, err)
+	}
 	insertResult, err := DB.Collection.InsertOne(context.TODO(), config)
-	checkError(err, c)
+	if checkError(err) {
+		return c.JSON(500, err)
+	}
 	config.ID = insertResult.InsertedID.(primitive.ObjectID)
-	c.JSON(201, config)
+	return c.JSON(201, config)
 }

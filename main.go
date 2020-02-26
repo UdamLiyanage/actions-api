@@ -3,6 +3,8 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	_ "github.com/joho/godotenv/autoload"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/unrolled/secure"
 	"go.mongodb.org/mongo-driver/mongo"
 	"log"
@@ -19,48 +21,32 @@ func init() {
 	DB.Collection = connect()
 }
 
-func setupRouter() *gin.Engine {
-	secureMiddleware := secure.New(secure.Options{
-		AllowedHosts:  []string{os.Getenv("ALLOWED_HOSTS")},
-		SSLRedirect:   true,
-		STSSeconds:    31536000,
-		FrameDeny:     true,
-		IsDevelopment: false,
-	})
-
-	secureFunc := func() gin.HandlerFunc {
-		return func(c *gin.Context) {
-			err := secureMiddleware.Process(c.Writer, c.Request)
-
-			if err != nil {
-				c.Abort()
-				return
-			}
-
-			if status := c.Writer.Status(); status > 300 && status < 399 {
-				c.Abort()
-			}
+func setupRouter() *echo.Echo {
+	e := echo.New()
+	e.Use(middleware.RequestID())
+	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+		Format: "time=${time_rfc3339} method=${method}, uri=${uri}, status=${status} path=${path} latency=${latency_human}\n",
+	}))
+	e.Use(middleware.BasicAuth(func(username, password string, c echo.Context) (bool, error) {
+		if username == os.Getenv("API_AUTH_USERNAME") && password == os.Getenv("API_AUTH_PASSWORD") {
+			return true, nil
 		}
-	}()
+		return false, nil
+	}))
 
-	r := gin.Default()
-	auth := gin.BasicAuth(gin.Accounts{
-		os.Getenv("API_AUTH_USERNAME"): os.Getenv("API_AUTH_PASSWORD"),
-	})
-	r.Use(auth)
-	r.Use(secureFunc)
+	e.Use(middleware.Recover())
 
-	r.GET("/configurations/:id", readConfiguration)
+	e.GET("/configurations/:id", readConfiguration)
 
-	r.POST("/configurations/create", createConfiguration)
+	e.POST("/configurations/create", createConfiguration)
 
-	r.PUT("/configurations/:id", updateConfiguration)
+	e.PUT("/configurations/:id", updateConfiguration)
 
-	r.DELETE("/configurations/:id", deleteConfiguration)
-	return r
+	e.DELETE("/configurations/:id", deleteConfiguration)
+	return e
 }
 
 func main() {
 	r := setupRouter()
-	log.Fatal(r.Run(":8003"))
+	r.Logger.Fatal(r.Start(":8003"))
 }

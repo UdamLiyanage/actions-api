@@ -2,17 +2,21 @@ package main
 
 import (
 	"context"
-	"github.com/gin-gonic/gin"
+	"github.com/labstack/echo/v4"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func readConfiguration(c *gin.Context) {
+func readConfiguration(c echo.Context) error {
 	var config Configuration
 	objID, err := primitive.ObjectIDFromHex(c.Param("id"))
-	checkError(err, c)
+	if checkError(err) {
+		return c.JSON(500, err)
+	}
 	filter := bson.M{"_id": objID}
 	err = DB.Collection.FindOne(context.TODO(), filter).Decode(&config)
-	checkError(err, c)
-	c.JSON(200, config)
+	if checkError(err) {
+		return c.JSON(404, err)
+	}
+	return c.JSON(200, config)
 }
