@@ -1,13 +1,10 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
 	_ "github.com/joho/godotenv/autoload"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/unrolled/secure"
 	"go.mongodb.org/mongo-driver/mongo"
-	"log"
 	"os"
 )
 
