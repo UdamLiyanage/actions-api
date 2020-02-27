@@ -34,6 +34,7 @@ func setupRouter() *echo.Echo {
 	e.Use(middleware.Recover())
 
 	e.GET("/configurations/:id", readConfiguration)
+	e.GET("/configurations/all/:id", readAllConfigurations)
 
 	e.POST("/configurations/create", createConfiguration)
 

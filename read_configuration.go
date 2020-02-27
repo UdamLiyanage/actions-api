@@ -20,3 +20,25 @@ func readConfiguration(c echo.Context) error {
 	}
 	return c.JSON(200, config)
 }
+
+func readAllConfigurations(c echo.Context) error {
+	var configs []Configuration
+	deviceID := c.Param("id")
+	filter := bson.D{{"device_token", deviceID}}
+	cur, err := DB.Collection.Find(context.TODO(), filter)
+	if err != nil {
+		panic(err)
+	}
+	for cur.Next(context.TODO()) {
+		var config Configuration
+		err := cur.Decode(&config)
+		if err != nil {
+			panic(err)
+		}
+		configs = append(configs, config)
+	}
+	if err := cur.Err(); err != nil {
+		panic(err)
+	}
+	return c.JSON(200, configs)
+}
