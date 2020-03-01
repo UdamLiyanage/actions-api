@@ -1,4 +1,4 @@
-IMAGE := udamliyanage/actions-api:v1.0.0
+IMAGE := udamliyanage/actions-api:v1.0.1
 
 test:
 	true

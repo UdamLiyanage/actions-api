@@ -24,7 +24,7 @@ func updateAction(c echo.Context) error {
 			"device_token":  action.DeviceToken,
 			"device_serial": action.DeviceSerial,
 			"action_type":   action.ActionType,
-			"configuration": action.ActionConfig,
+			"action":        action.ActionConfig,
 		},
 	}
 	res, err := DB.Collection.UpdateOne(context.TODO(), filter, update)
