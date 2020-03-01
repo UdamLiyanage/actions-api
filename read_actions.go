@@ -7,22 +7,22 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func readConfiguration(c echo.Context) error {
-	var config Configuration
+func readAction(c echo.Context) error {
+	var action Action
 	objID, err := primitive.ObjectIDFromHex(c.Param("id"))
 	if checkError(err) {
 		return c.JSON(500, err)
 	}
 	filter := bson.M{"_id": objID}
-	err = DB.Collection.FindOne(context.TODO(), filter).Decode(&config)
+	err = DB.Collection.FindOne(context.TODO(), filter).Decode(&action)
 	if checkError(err) {
 		return c.JSON(404, err)
 	}
-	return c.JSON(200, config)
+	return c.JSON(200, action)
 }
 
-func readAllConfigurations(c echo.Context) error {
-	var configs []Configuration
+func readAllDeviceActions(c echo.Context) error {
+	var configs []Action
 	deviceID := c.Param("id")
 	filter := bson.D{{"device_token", deviceID}}
 	cur, err := DB.Collection.Find(context.TODO(), filter)
@@ -30,7 +30,7 @@ func readAllConfigurations(c echo.Context) error {
 		panic(err)
 	}
 	for cur.Next(context.TODO()) {
-		var config Configuration
+		var config Action
 		err := cur.Decode(&config)
 		if err != nil {
 			panic(err)

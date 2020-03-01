@@ -8,9 +8,9 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func updateConfiguration(c echo.Context) error {
-	var config Configuration
-	err := json.NewDecoder(c.Request().Body).Decode(&config)
+func updateAction(c echo.Context) error {
+	var action Action
+	err := json.NewDecoder(c.Request().Body).Decode(&action)
 	if checkError(err) {
 		return c.JSON(500, err)
 	}
@@ -21,7 +21,10 @@ func updateConfiguration(c echo.Context) error {
 	filter := bson.M{"_id": objID}
 	update := bson.M{
 		"$set": bson.M{
-			"configuration": config.Configuration,
+			"device_token":  action.DeviceToken,
+			"device_serial": action.DeviceSerial,
+			"action_type":   action.ActionType,
+			"configuration": action.ActionConfig,
 		},
 	}
 	res, err := DB.Collection.UpdateOne(context.TODO(), filter, update)

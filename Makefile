@@ -1,4 +1,4 @@
-IMAGE := udamliyanage/device-configuration-service:v2.1.0
+IMAGE := udamliyanage/actions-api:v1.0.0
 
 test:
 	true

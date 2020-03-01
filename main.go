@@ -33,14 +33,14 @@ func setupRouter() *echo.Echo {
 
 	e.Use(middleware.Recover())
 
-	e.GET("/configurations/:id", readConfiguration)
-	e.GET("/configurations/all/:id", readAllConfigurations)
+	e.GET("/actions/:id", readAction)
+	e.GET("/actions/all/:id", readAllDeviceActions)
 
-	e.POST("/configurations/create", createConfiguration)
+	e.POST("/actions/create", createAction)
 
-	e.PUT("/configurations/:id", updateConfiguration)
+	e.PUT("/actions/:id", updateAction)
 
-	e.DELETE("/configurations/:id", deleteConfiguration)
+	e.DELETE("/actions/:id", deleteAction)
 	return e
 }
 

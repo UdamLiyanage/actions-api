@@ -8,7 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func deleteConfiguration(c echo.Context) error {
+func deleteAction(c echo.Context) error {
 	opts := options.Delete().SetCollation(&options.Collation{
 		Locale:    "en_US",
 		Strength:  1,
