@@ -13,7 +13,7 @@ func createAction(c echo.Context) error {
 	if checkError(err) {
 		return c.JSON(500, err)
 	}
-	insertResult, err := DB.Collection.InsertOne(context.TODO(), action)
+	insertResult, err := collection.InsertOne(context.TODO(), action)
 	if checkError(err) {
 		return c.JSON(500, err)
 	}

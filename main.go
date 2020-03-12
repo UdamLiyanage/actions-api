@@ -8,14 +8,12 @@ import (
 	"os"
 )
 
-type Database struct {
-	Collection *mongo.Collection
-}
-
-var DB = Database{}
+var (
+	collection *mongo.Collection
+)
 
 func init() {
-	DB.Collection = connect()
+	collection = connect()
 }
 
 func setupRouter() *echo.Echo {
